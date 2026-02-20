@@ -1,0 +1,104 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+*.egg
+pip-wheel-metadata/
+share/python-wheels/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.tox/
+*.cover
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nose2-junit.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Django stuff:
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# virtualenv
+venv/
+ENV/
+.env/
+.venv/
+env/
+env.bak/
+
+# Spyder project settings
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs site
+site/
+
+# mypy
+.mypy_cache/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Streamlit
+.streamlit/
+
+# SQLite databases
+*.db
+*.sqlite3
+*.sqlite
