@@ -36,6 +36,34 @@ def init_db():
         )
     ''')
     
+    # Create user adoption tracking table (for specific apps)
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS user_adoptions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            app_name TEXT NOT NULL,
+            num_users INTEGER NOT NULL,
+            adoption_date TEXT NOT NULL,
+            notes TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(app_name, adoption_date)
+        )
+    ''')
+
+    # Create project updates tracking table
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS project_updates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER NOT NULL,
+            task_name TEXT NOT NULL,
+            update_text TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'In Progress',
+            progress_percent INTEGER NOT NULL DEFAULT 0,
+            update_date TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
+        )
+    ''')
+    
     conn.commit()
     conn.close()
 
@@ -146,3 +174,122 @@ def get_project_by_id(project_id):
     df = pd.read_sql_query("SELECT * FROM projects WHERE id = ?", conn, params=(project_id,))
     conn.close()
     return df.iloc[0] if len(df) > 0 else None
+# User Adoption Tracking Functions
+def add_adoption(app_name, num_users, adoption_date, notes=''):
+    """Add a new user adoption record for an app."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    try:
+        c.execute('''
+            INSERT INTO user_adoptions (app_name, num_users, adoption_date, notes)
+            VALUES (?, ?, ?, ?)
+        ''', (app_name, num_users, adoption_date, notes))
+        conn.commit()
+    except sqlite3.IntegrityError:
+        # Update if record already exists for this app on this date
+        c.execute('''
+            UPDATE user_adoptions
+            SET num_users = ?, notes = ?
+            WHERE app_name = ? AND adoption_date = ?
+        ''', (num_users, notes, app_name, adoption_date))
+        conn.commit()
+    conn.close()
+
+def get_all_adoptions():
+    """Retrieve all user adoption records."""
+    conn = sqlite3.connect(DB_PATH)
+    df = pd.read_sql_query("SELECT * FROM user_adoptions ORDER BY adoption_date DESC", conn)
+    conn.close()
+    return df
+
+def get_adoption_by_date(adoption_date):
+    """Get all adoption records for a specific date."""
+    conn = sqlite3.connect(DB_PATH)
+    df = pd.read_sql_query(
+        "SELECT * FROM user_adoptions WHERE adoption_date = ? ORDER BY app_name",
+        conn,
+        params=(adoption_date,)
+    )
+    conn.close()
+    return df
+
+def get_app_adoption_history(app_name):
+    """Get adoption history for a specific app."""
+    conn = sqlite3.connect(DB_PATH)
+    df = pd.read_sql_query(
+        "SELECT * FROM user_adoptions WHERE app_name = ? ORDER BY adoption_date",
+        conn,
+        params=(app_name,)
+    )
+    conn.close()
+    return df
+
+def get_adoption_by_id(adoption_id):
+    """Get a single adoption record by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    df = pd.read_sql_query("SELECT * FROM user_adoptions WHERE id = ?", conn, params=(adoption_id,))
+    conn.close()
+    return df.iloc[0] if len(df) > 0 else None
+
+def update_adoption(adoption_id, app_name, num_users, adoption_date, notes=''):
+    """Update an adoption record."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''
+        UPDATE user_adoptions
+        SET app_name = ?, num_users = ?, adoption_date = ?, notes = ?
+        WHERE id = ?
+    ''', (app_name, num_users, adoption_date, notes, adoption_id))
+    conn.commit()
+    conn.close()
+
+def delete_adoption(adoption_id):
+    """Delete an adoption record."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("DELETE FROM user_adoptions WHERE id = ?", (adoption_id,))
+    conn.commit()
+    conn.close()
+
+
+def add_project_update(project_id, task_name, update_text, status, progress_percent, update_date):
+    """Add a project/task status update."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''
+        INSERT INTO project_updates (project_id, task_name, update_text, status, progress_percent, update_date)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (project_id, task_name, update_text, status, progress_percent, update_date))
+    conn.commit()
+    conn.close()
+
+
+def get_project_updates(project_id=None):
+    """Retrieve project updates, optionally filtered by project."""
+    conn = sqlite3.connect(DB_PATH)
+
+    if project_id is None:
+        df = pd.read_sql_query(
+            '''
+            SELECT pu.*, p.name as project_name
+            FROM project_updates pu
+            JOIN projects p ON pu.project_id = p.id
+            ORDER BY pu.update_date DESC, pu.created_at DESC
+            ''',
+            conn
+        )
+    else:
+        df = pd.read_sql_query(
+            '''
+            SELECT pu.*, p.name as project_name
+            FROM project_updates pu
+            JOIN projects p ON pu.project_id = p.id
+            WHERE pu.project_id = ?
+            ORDER BY pu.update_date DESC, pu.created_at DESC
+            ''',
+            conn,
+            params=(project_id,)
+        )
+
+    conn.close()
+    return df

@@ -20,6 +20,7 @@ A comprehensive Python-based dashboard application built with **Streamlit** for 
 
 ### Analytics & Reporting
 - 📅 **Timeline Tracking**: Monitor days remaining and project deadlines
+- 🕒 **Task Updates Timeline**: Capture project/task status updates and track progress development over time
 - 📊 **Summary Dashboard**: View statistics and performance metrics across all projects
 - 🔬 **Advanced Analytics**: Risk assessment, health status, performance metrics
 - 📈 **Predictive Analytics**: Project completion forecasting
