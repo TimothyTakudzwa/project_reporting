@@ -12,6 +12,11 @@ from database import (
     add_project_update, get_project_updates
 )
 
+from dashboard_v2 import run_dashboard
+
+run_dashboard()
+st.stop()
+
 # Initialize the database
 init_db()
 

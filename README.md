@@ -72,27 +72,28 @@ The application will open in your default browser at `http://localhost:8501`
 
 ## Usage
 
-### Adding a Project
-1. Use the **"Add/Edit Project"** section in the left sidebar
-2. Enter the project name
-3. Select the project type
-4. Set start and end dates
-5. Input current progress (0-100%)
-6. Click **"Add Project"**
+### Navigation Model
+The dashboard is now grouped by management domain using a sidebar navigator:
 
-### Dashboard Features
-- **Progress Comparison**: See side-by-side comparison of actual vs. targeted progress
-- **Timeline Info**: View start date, end date, and days remaining
-- **Project Status**: Easily identify projects that are on track or behind schedule
-- **Summary Statistics**: 
-  - Average current and targeted progress
-  - Number of projects on track vs. behind schedule
-  - Breakdown of projects by type
+1. **Overview** – executive KPIs, portfolio health, and action register
+2. **Projects** – grouped project portfolio with health and variance filters
+3. **Features** – delivery-focused feature analytics and urgency tracking
+4. **Adoption** – user growth trends by application
+5. **Updates** – task timeline and status monitoring
+6. **Admin Center** – all create/update/delete workflows
 
-### Managing Projects
-- View all projects in the main dashboard
-- Click **Delete** button to remove a project
-- All data is automatically saved to SQLite database
+### Project Management Best-Practice Views
+- **Health classification**: `On Track`, `Watch`, `At Risk` based on variance to target.
+- **Priority action register**: highlights projects requiring intervention.
+- **Grouped reporting**: portfolio grouped by project type for easier governance reviews.
+- **Delivery risk visibility**: feature urgency buckets (`Overdue`, `Due in 7 Days`, `Future`).
+- **Single admin area**: data operations isolated from reporting pages.
+
+### Managing Records
+- Use **Admin Center → Project Registry** to add/edit/remove projects.
+- Use **Admin Center → Feature Registry** to maintain project feature backlogs.
+- Use **Admin Center → Adoption Registry** for app adoption snapshots.
+- Use **Admin Center → Update Log** to capture project task updates.
 
 ## Data Storage
 
