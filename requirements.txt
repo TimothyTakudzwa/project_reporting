@@ -1,5 +1,7 @@
+
+Pillow>=12.0.0
+numpy>=1.26.4
 streamlit==1.28.1
-pillow
 pandas
 plotly==5.17.0
 python-dateutil==2.8.2
